@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#12322d" />
+    <title>Formatwerkstatt | Dokumente konvertieren</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&display=swap");
+      :root { --ink:#17322e; --forest:#12322d; --paper:#f8f7f1; --canvas:#e5ece5; --lime:#cbed56; --coral:#ed6a4e; --muted:#64756f; --line:#bfd0c9; --white:#fff; --shadow:0 18px 42px rgba(26,56,48,.12); }
+      * { box-sizing:border-box; } body { margin:0; min-width:320px; color:var(--ink); background-color:var(--canvas); background-image:linear-gradient(rgba(18,50,45,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(18,50,45,.045) 1px,transparent 1px); background-size:28px 28px; font:500 15px/1.5 Manrope,sans-serif; }
+      button,select { font:inherit; } button { cursor:pointer; } .shell { width:min(1180px,calc(100% - 32px)); margin:auto; } .topbar { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:24px 0; } .brand { display:flex; align-items:center; gap:10px; color:var(--forest); font-weight:800; } .brand-mark { display:grid; width:32px; height:32px; place-items:center; border:2px solid var(--forest); font:500 13px "DM Mono",monospace; } .privacy { margin:0; color:var(--muted); font-size:13px; }
+      main { padding:18px 0 50px; } .intro { display:grid; grid-template-columns:1.25fr .75fr; gap:30px; align-items:end; margin:22px 0 30px; } .eyebrow { margin:0 0 9px; color:#4f685f; font:500 12px "DM Mono",monospace; text-transform:uppercase; } h1 { margin:0; font-size:clamp(34px,5vw,60px); line-height:1.04; } .intro-copy { margin:0; max-width:405px; color:var(--muted); font-size:16px; }
+      .workspace { display:grid; grid-template-columns:minmax(0,1fr) 328px; gap:16px; align-items:start; } .converter,.formats { border:1px solid var(--line); background:var(--paper); box-shadow:var(--shadow); } .converter { padding:22px; } .formats { padding:20px; } .dropzone { display:grid; min-height:210px; place-items:center; border:2px dashed #84a59c; background:#eff4eb; text-align:center; transition:.15s; } .dropzone.is-dragging { border-color:var(--forest); background:#dceecf; } .dropzone__inside { padding:25px 16px; } .file-stamp { display:grid; width:52px; height:62px; place-items:center; position:relative; margin:0 auto 12px; border:2px solid var(--forest); font:500 12px "DM Mono",monospace; } .file-stamp:after { position:absolute; top:-2px; right:-2px; width:15px; height:15px; border-bottom:2px solid var(--forest); border-left:2px solid var(--forest); background:#eff4eb; content:""; } h2 { margin:0; font-size:19px; } .dropzone h2 { font-size:21px; } .dropzone p,.formats>p { margin:5px 0 15px; color:var(--muted); font-size:13px; }
+      .button { min-height:42px; padding:9px 15px; border:1px solid var(--forest); border-radius:0; background:var(--forest); color:var(--white); font-weight:700; } .button:hover { background:#285249; } .button--outline { background:transparent; border-color:#78948b; color:var(--forest); } .button--outline:hover { background:#e2ebe0; } .queue-header { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:24px 0 10px; } .queue-header h2 { font-size:16px; } .file-count { color:var(--muted); font:500 12px "DM Mono",monospace; } .queue { display:flex; flex-direction:column; gap:8px; } .queue-empty { margin:4px 0; color:var(--muted); font-size:14px; } .file-row { display:grid; grid-template-columns:42px minmax(0,1fr) 104px 34px; gap:10px; align-items:center; padding:10px; border:1px solid var(--line); background:var(--white); } .file-type { display:grid; width:42px; height:34px; place-items:center; background:#deede5; color:var(--forest); font:500 11px "DM Mono",monospace; text-transform:uppercase; } .file-name { min-width:0; } .file-name strong,.file-name span { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .file-name strong { font-size:13px; } .file-name span { color:var(--muted); font-size:12px; } .row-select,.format-select { border:1px solid #78948b; border-radius:0; background:var(--white); color:var(--ink); } .row-select { width:100%; padding:6px; font-size:12px; } .remove { width:30px; height:30px; border:0; background:transparent; color:var(--muted); font-size:22px; } .remove:hover { color:var(--coral); }
+      .settings { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:end; margin-top:20px; padding-top:18px; border-top:1px solid var(--line); } .field-label { display:block; margin-bottom:6px; color:var(--muted); font-size:12px; font-weight:700; } .format-select { width:100%; height:42px; padding:0 10px; } .status { min-height:21px; margin:12px 0 0; color:var(--muted); font-size:13px; } .status.is-error { color:#a24a34; } .status.is-success { color:#20684c; }
+      .format-group { padding:14px 0; border-top:1px solid var(--line); } .format-group h3 { margin:0 0 8px; font-size:13px; } .chips { display:flex; flex-wrap:wrap; gap:6px; } .chip { padding:4px 7px; border:1px solid #a9bfb7; background:#f5f8f3; color:#365a50; font:500 11px "DM Mono",monospace; } .service-note { margin-top:18px; padding:12px; border-left:4px solid var(--coral); background:#fff0e9; color:#6a4438; font-size:12px; } .service-note strong { display:block; margin-bottom:3px; }
+      .suggestions { margin-top:34px; padding-top:22px; border-top:1px solid rgba(18,50,45,.18); } .suggestions h2 { margin-bottom:12px; } .suggestion-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; } .suggestion { padding:13px; border:1px solid var(--line); background:rgba(248,247,241,.76); } .suggestion strong { display:block; margin-bottom:4px; font:500 13px "DM Mono",monospace; } .suggestion span { color:var(--muted); font-size:12px; }
+      @media(max-width:800px){.intro,.workspace{grid-template-columns:1fr}.intro{gap:12px}.suggestion-grid{grid-template-columns:repeat(2,1fr)}} @media(max-width:500px){.shell{width:min(100% - 22px,1180px)}.privacy{display:none}.converter,.formats{padding:14px}.file-row{grid-template-columns:38px minmax(0,1fr) 30px}.file-row .row-select{grid-column:2}.settings{grid-template-columns:1fr}}
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+    <script src="https://unpkg.com/docx@8.5.0/build/index.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  </head>
+  <body>
+    <div class="shell"><header class="topbar"><div class="brand"><span class="brand-mark">FW</span> Formatwerkstatt</div><p class="privacy">Verarbeitung und Download erfolgen in deinem Browser.</p></header>
+      <main><section class="intro"><div><p class="eyebrow">Bulk-Dokumentkonverter</p><h1>Ein Stapel rein.<br>Das richtige Format raus.</h1></div><p class="intro-copy">Konvertiere Textinhalte aus mehreren PDFs, Word-Dateien und Textformaten direkt auf deinem Gerät.</p></section>
+        <section class="workspace" aria-label="Konverter"><div class="converter"><input id="file-input" type="file" multiple hidden accept=".pdf,.docx,.txt,.md,.html,.htm,.rtf"><div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Dateien auswählen oder hier ablegen"><div class="dropzone__inside"><div class="file-stamp">FILE</div><h2>Dokumente hier ablegen</h2><p>PDF, DOCX, TXT, Markdown, HTML und RTF</p><button id="browse-button" class="button button--outline" type="button">Dateien auswählen</button></div></div><div class="queue-header"><h2>Warteschlange</h2><span id="file-count" class="file-count">0 DATEIEN</span></div><div id="queue" class="queue"><p class="queue-empty">Noch keine Dateien ausgewählt.</p></div><div class="settings"><label><span class="field-label">Zielformat für alle Dateien</span><select id="target-format" class="format-select"><option value="docx">Word (.docx)</option><option value="pdf">PDF (.pdf)</option><option value="txt">Klartext (.txt)</option><option value="md">Markdown (.md)</option><option value="html">HTML (.html)</option><option value="rtf">Rich Text (.rtf)</option></select></label><button id="convert-button" class="button" type="button">Stapel konvertieren</button></div><p id="status" class="status" role="status">Füge Dokumente hinzu, um einen Stapel vorzubereiten.</p></div>
+          <aside class="formats"><h2>Sinnvolle Textformate</h2><p>Die folgenden Formate passen gut zu diesem Werkzeug.</p><section class="format-group"><h3>Voll unterstützt</h3><div class="chips"><span class="chip">PDF</span><span class="chip">DOCX</span><span class="chip">TXT</span><span class="chip">MD</span><span class="chip">HTML</span><span class="chip">RTF</span></div></section><section class="format-group"><h3>Gute Ergänzungen</h3><div class="chips"><span class="chip">ODT</span><span class="chip">EPUB</span><span class="chip">GOOGLE DOCS</span></div></section><div class="service-note"><strong>Zu Google Docs und ODT</strong>Google Docs braucht eine Google-Anmeldung und ODT einen Office-Konverter. Beides kann als nächster Schritt über einen kleinen lokalen Server ergänzt werden. Diese Seite erzeugt bereits DOCX, das Google Docs direkt importieren kann.</div></aside></section>
+        <section class="suggestions"><h2>Was dabei erhalten bleibt</h2><div class="suggestion-grid"><div class="suggestion"><strong>DOCX</strong><span>Text aus PDF oder Textdateien wird als bearbeitbares Word-Dokument erzeugt.</span></div><div class="suggestion"><strong>PDF</strong><span>Text wird als neues, lesbares PDF gesetzt.</span></div><div class="suggestion"><strong>TXT / MD</strong><span>Ideal für Inhalte ohne komplexe Gestaltung.</span></div><div class="suggestion"><strong>HTML / RTF</strong><span>Praktisch für Web oder einfach formatierte Texte.</span></div></div></section>
+      </main></div>
+    <script type="module">
+      import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
+      const state = { files: [] };
+      const formats = ["docx","pdf","txt","md","html","rtf"];
+      const input = document.querySelector("#file-input"), dropzone = document.querySelector("#dropzone"), queue = document.querySelector("#queue"), count = document.querySelector("#file-count"), target = document.querySelector("#target-format"), status = document.querySelector("#status"), convert = document.querySelector("#convert-button");
+      const extension = (file) => file.name.includes(".") ? file.name.split(".").pop().toLowerCase() : "datei";
+      const filename = (file) => file.name.replace(/\.[^.]+$/, "");
+      const size = (bytes) => bytes < 1048576 ? `${Math.max(1,Math.round(bytes/1024))} KB` : `${(bytes/1048576).toFixed(1)} MB`;
+      const esc = (value) => String(value).replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[character]);
+      function render() { count.textContent = `${state.files.length} ${state.files.length === 1 ? "DATEI" : "DATEIEN"}`; queue.innerHTML = state.files.length ? state.files.map((item,index) => `<article class="file-row"><span class="file-type">${esc(extension(item.file).slice(0,4))}</span><div class="file-name"><strong title="${esc(item.file.name)}">${esc(item.file.name)}</strong><span>${size(item.file.size)}</span></div><select class="row-select" data-index="${index}" aria-label="Zielformat"><option value="docx"${item.target === "docx" ? " selected" : ""}>.docx</option><option value="pdf"${item.target === "pdf" ? " selected" : ""}>.pdf</option><option value="txt"${item.target === "txt" ? " selected" : ""}>.txt</option><option value="md"${item.target === "md" ? " selected" : ""}>.md</option><option value="html"${item.target === "html" ? " selected" : ""}>.html</option><option value="rtf"${item.target === "rtf" ? " selected" : ""}>.rtf</option></select><button class="remove" data-remove="${index}" title="Entfernen" aria-label="Entfernen">×</button></article>`).join("") : '<p class="queue-empty">Noch keine Dateien ausgewählt.</p>'; }
+      function add(files) { const accepted = Array.from(files).filter(file => formats.includes(extension(file))); const fresh = accepted.filter(file => !state.files.some(item => item.file.name === file.name && item.file.size === file.size)); state.files.push(...fresh.map(file => ({file,target:target.value}))); render(); status.className = "status"; status.textContent = fresh.length ? `${fresh.length} Datei${fresh.length === 1 ? "" : "en"} bereit zur Konvertierung.` : "Bitte wähle PDF, DOCX, TXT, Markdown, HTML oder RTF aus."; }
+      document.querySelector("#browse-button").addEventListener("click", () => input.click()); dropzone.addEventListener("click", event => { if(event.target === dropzone) input.click(); }); dropzone.addEventListener("keydown", event => { if(event.key === "Enter" || event.key === " "){ event.preventDefault(); input.click(); }}); input.addEventListener("change", () => { add(input.files); input.value = ""; }); ["dragenter","dragover"].forEach(name => dropzone.addEventListener(name,event => {event.preventDefault();dropzone.classList.add("is-dragging");})); ["dragleave","drop"].forEach(name => dropzone.addEventListener(name,event => {event.preventDefault();dropzone.classList.remove("is-dragging");})); dropzone.addEventListener("drop", event => add(event.dataTransfer.files));
+      queue.addEventListener("change", event => { const item = state.files[Number(event.target.dataset.index)]; if(item) item.target = event.target.value; }); queue.addEventListener("click", event => { const index = Number(event.target.dataset.remove); if(Number.isInteger(index)){state.files.splice(index,1);render();} }); target.addEventListener("change", () => {state.files.forEach(item => item.target = target.value);render();status.textContent="Zielformat auf alle Dateien angewendet.";});
+      function textToHtml(text,title){return `<!doctype html><html lang="de"><head><meta charset="utf-8"><title>${esc(title)}</title><style>body{font:11pt Georgia,serif;line-height:1.45;max-width:760px;margin:36px auto;padding:0 24px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #777;padding:6px;text-align:left}</style></head><body>${text.split(/\n{2,}/).map(part => `<p>${esc(part).replace(/\n/g,"<br>")}</p>`).join("\n")}</body></html>`;}
+      function textToRtf(text){return `{\\rtf1\\ansi\\deff0\n${text.replace(/\\/g,"\\\\").replace(/[{}]/g,"\\$&").replace(/\n/g,"\\par\n")}}`;}
+      function makePdfLines(items) {
+        const rows = new Map();
+        items.filter(item => item.str.trim()).forEach(item => {
+          const y = Math.round(item.transform[5] * 2) / 2;
+          if (!rows.has(y)) rows.set(y, []);
+          rows.get(y).push({ text: item.str, x: item.transform[4] });
+        });
+        return [...rows.entries()].sort((left, right) => right[0] - left[0]).map(([y, row]) => {
+          const words = row.sort((left, right) => left.x - right.x);
+          let columns = 0;
+          const text = words.map((word, index) => {
+            if (index && word.x - words[index - 1].x > 45) columns++;
+            return word.text;
+          }).join(" ").replace(/\s+/g, " ").trim();
+          return { y, text, columns };
+        }).filter(line => line.text);
+      }
+      async function sourceDocument(file) {
+        const type = extension(file);
+        if (type === "docx") {
+          const arrayBuffer = await file.arrayBuffer();
+          const converted = await window.mammoth.convertToHtml({ arrayBuffer });
+          const parsed = new DOMParser().parseFromString(converted.value, "text/html");
+          return { type, text: parsed.body.innerText, html: converted.value, hasTable: Boolean(parsed.querySelector("table")) };
+        }
+        if (type === "pdf") {
+          const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+          const paragraphs = [], htmlPages = [];
+          let hasTable = false;
+          for (let index = 1; index <= pdf.numPages; index++) {
+            const content = await (await pdf.getPage(index)).getTextContent();
+            const lines = makePdfLines(content.items);
+            const gaps = lines.slice(1).map((line, position) => Math.abs(line.y - lines[position].y)).filter(Boolean);
+            const normalGap = gaps.length ? gaps.sort((left, right) => left - right)[Math.floor(gaps.length / 2)] : 12;
+            hasTable ||= lines.filter(line => line.columns >= 2).length >= 2;
+            let pageHtml = "", previousY;
+            lines.forEach(line => {
+              const newParagraph = previousY !== undefined && Math.abs(previousY - line.y) > normalGap * 1.55;
+              if (newParagraph) { paragraphs.push(""); pageHtml += "<br>"; }
+              paragraphs.push(line.text); pageHtml += `<p>${esc(line.text)}</p>`; previousY = line.y;
+            });
+            htmlPages.push(`<section class="pdf-page">${pageHtml}</section>`);
+            paragraphs.push("");
+          }
+          return { type, text: paragraphs.join("\n").replace(/\n{3,}/g, "\n\n").trim(), html: htmlPages.join("<hr>"), hasTable };
+        }
+        const raw = await file.text();
+        if (type === "html" || type === "htm") {
+          const parsed = new DOMParser().parseFromString(raw, "text/html");
+          parsed.querySelectorAll("script,style").forEach(element => element.remove());
+          return { type, text: parsed.body.innerText, html: parsed.body.innerHTML, hasTable: Boolean(parsed.querySelector("table")) };
+        }
+        const text = type === "rtf" ? raw.replace(/\\par[d]?/g,"\n").replace(/\\'[0-9a-f]{2}/gi,"").replace(/\\[a-z]+-?\d* ?/gi,"").replace(/[{}]/g,"") : raw;
+        return { type, text, html: textToHtml(text, filename(file)).match(/<body>([\s\S]*)<\/body>/i)[1], hasTable: false };
+      }
+      async function htmlToPdf(html) {
+        const holder = document.createElement("div");
+        holder.style.cssText = "position:fixed;left:-10000px;top:0;width:740px;padding:28px;background:#fff;color:#111;font:11pt Georgia,serif;line-height:1.45";
+        holder.innerHTML = `<style>h1{font-size:24pt}h2{font-size:18pt}h3{font-size:14pt}table{border-collapse:collapse;width:100%}td,th{border:1px solid #555;padding:6px;text-align:left}li{margin:4px 0}.pdf-page{break-after:page}</style>${html}`;
+        document.body.append(holder);
+        try { const pdf = new window.jspdf.jsPDF({ unit:"pt", format:"a4" }); await pdf.html(holder, { x:36, y:30, width:523, windowWidth:740, autoPaging:"text" }); return pdf.output("blob"); } finally { holder.remove(); }
+      }
+      async function output(file,format){
+        if (extension(file) === "docx" && format === "docx") return { name:file.name, data:file };
+        const documentData = await sourceDocument(file);
+        if(format === "docx") {
+          const paragraphs = documentData.text.split(/\n{2,}/).filter(Boolean).map(paragraph => new window.docx.Paragraph({ children:[new window.docx.TextRun(paragraph.replace(/\n/g," "))], spacing:{ after:180 } }));
+          const documentFile = new window.docx.Document({ sections:[{children:paragraphs}] });
+          return {name:`${filename(file)}.docx`,data:await window.docx.Packer.toBlob(documentFile), warning:documentData.hasTable};
+        }
+        if(format === "pdf") return {name:`${filename(file)}.pdf`,data:await htmlToPdf(documentData.html), warning:documentData.type === "pdf" && documentData.hasTable};
+        if(format === "html") return {name:`${filename(file)}.html`,data:new Blob([textToHtml(documentData.text,filename(file)).replace(/<body>[\s\S]*<\/body>/i, `<body>${documentData.html}</body>`)],{type:"text/html"}), warning:documentData.type === "pdf" && documentData.hasTable};
+        if(format === "rtf") return {name:`${filename(file)}.rtf`,data:new Blob([textToRtf(documentData.text)],{type:"application/rtf"}), warning:documentData.type === "pdf" && documentData.hasTable};
+        return {name:`${filename(file)}.${format}`,data:new Blob([documentData.text],{type:"text/plain;charset=utf-8"}), warning:documentData.type === "pdf" && documentData.hasTable};
+      }
+      function download(blob,name){const url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+      convert.addEventListener("click",async()=>{if(!state.files.length){status.className="status is-error";status.textContent="Bitte füge zuerst mindestens eine Datei hinzu.";return;}convert.disabled=true;convert.textContent="Konvertiert ...";status.className="status";status.textContent=`0 von ${state.files.length} Dateien werden verarbeitet ...`;try{const results=[];for(const [index,item] of state.files.entries()){results.push(await output(item.file,item.target));status.textContent=`${index+1} von ${state.files.length} Dateien verarbeitet ...`;}if(results.length===1)download(results[0].data,results[0].name);else{const zip=new window.JSZip();results.forEach(result=>zip.file(result.name,result.data));download(await zip.generateAsync({type:"blob"}),"formatwerkstatt-konvertiert.zip");}const tableWarning=results.some(result=>result.warning);status.className=tableWarning?"status is-error":"status is-success";status.textContent=tableWarning?`Fertig: ${results.length} Dateien heruntergeladen. Mindestens ein PDF enthielt wahrscheinlich eine Tabelle; sie wurde als Fließtext exportiert.`:`Fertig: ${results.length} Datei${results.length===1?"":"en"} wurde${results.length===1?"":"n"} heruntergeladen.`;}catch(error){console.error(error);status.className="status is-error";status.textContent="Die Konvertierung ist fehlgeschlagen. Prüfe, ob die Datei beschädigt oder passwortgeschützt ist.";}finally{convert.disabled=false;convert.textContent="Stapel konvertieren";}});
+    </script>
+  </body>
+</html>
