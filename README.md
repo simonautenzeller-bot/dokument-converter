@@ -29,3 +29,17 @@ Jede PDF-Seite wird mit pdf.js in einen Canvas gerendert und als Bild in die Zie
 .pdf oder .html) eingebettet. Das Layout bleibt dadurch pixelgenau erhalten, ist im Ergebnis aber
 nicht mehr editierbar (keine echte Notenerkennung/OMR). Fuer .txt, .md und .rtf ist das Verfahren
 nicht sinnvoll; dort wird weiterhin der Text-Layer extrahiert.
+
+## Songtexte mit Akkorden (Chord Sheets)
+
+Liedtexte mit Gitarrenakkorden (z. B. "G", "C", "em", "D") ueber den Textzeilen sind kein
+Notenbild, sondern echter Text - pdf.js liest Akkorde und Text korrekt aus, aber der Standard-
+Export verwirft dabei alle Zeilenumbrueche und die horizontale Ausrichtung, wodurch die Akkorde
+nicht mehr ueber dem passenden Wort stehen.
+
+Die Checkbox **"Songtexte mit Akkorden: Zeilenumbrüche & Ausrichtung beibehalten"** behaelt
+Zeilenumbrueche bei und rekonstruiert die horizontale Position jedes Worts ueber Leerzeichen
+(wie ein klassisches Text-Chord-Chart), gesetzt in einer Schreibmaschinenschrift (Consolas). Das
+Ergebnis ist normaler, vollstaendig editierbarer Text - Akkorde bleiben dabei ungefaehr ueber der
+richtigen Silbe stehen. Gilt fuer .docx, .txt, .md (als Codeblock) und .html (als `<pre>`); .rtf
+faellt auf den normalen Fließtext zurueck.
