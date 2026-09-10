@@ -198,8 +198,44 @@
         if(format === "rtf") return {name:`${filename(file)}.rtf`,data:new Blob([textToRtf(documentData.text)],{type:"application/rtf"}), warning:documentData.type === "pdf" && documentData.hasTable};
         return {name:`${filename(file)}.${format}`,data:new Blob([documentData.text],{type:"text/plain;charset=utf-8"}), warning:documentData.type === "pdf" && documentData.hasTable};
       }
-      function download(blob,name){const url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-      convert.addEventListener("click",async()=>{if(!state.files.length){status.className="status is-error";status.textContent="Bitte füge zuerst mindestens eine Datei hinzu.";return;}convert.disabled=true;convert.textContent="Konvertiert ...";status.className="status";status.textContent=`0 von ${state.files.length} Dateien werden verarbeitet ...`;try{const results=[];for(const [index,item] of state.files.entries()){results.push(await output(item.file,item.target));status.textContent=`${index+1} von ${state.files.length} Dateien verarbeitet ...`;}if(results.length===1)download(results[0].data,results[0].name);else{const zip=new window.JSZip();results.forEach(result=>zip.file(result.name,result.data));download(await zip.generateAsync({type:"blob"}),"formatwerkstatt-konvertiert.zip");}const tableWarning=results.some(result=>result.warning);status.className=tableWarning?"status is-error":"status is-success";status.textContent=tableWarning?`Fertig: ${results.length} Dateien heruntergeladen. Mindestens ein PDF enthielt wahrscheinlich eine Tabelle; sie wurde als Fließtext exportiert.`:`Fertig: ${results.length} Datei${results.length===1?"":"en"} wurde${results.length===1?"":"n"} heruntergeladen.`;}catch(error){console.error(error);status.className="status is-error";status.textContent="Die Konvertierung ist fehlgeschlagen. Prüfe, ob die Datei beschädigt oder passwortgeschützt ist.";}finally{convert.disabled=false;convert.textContent="Stapel konvertieren";}});
+      const saveTypes = {
+        docx: { description: "Word-Dokument", accept: { "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"] } },
+        pdf: { description: "PDF-Dokument", accept: { "application/pdf": [".pdf"] } },
+        txt: { description: "Textdatei", accept: { "text/plain": [".txt"] } },
+        md: { description: "Markdown-Datei", accept: { "text/markdown": [".md"] } },
+        html: { description: "HTML-Datei", accept: { "text/html": [".html"] } },
+        rtf: { description: "Rich-Text-Datei", accept: { "application/rtf": [".rtf"] } },
+        zip: { description: "ZIP-Archiv", accept: { "application/zip": [".zip"] } },
+      };
+      function directDownload(blob, name) { const url = URL.createObjectURL(blob), link = document.createElement("a"); link.href = url; link.download = name; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
+      convert.addEventListener("click",async()=>{
+        if(!state.files.length){status.className="status is-error";status.textContent="Bitte füge zuerst mindestens eine Datei hinzu.";return;}
+        const isSingle = state.files.length === 1;
+        const suggestedName = isSingle ? `${filename(state.files[0].file)}.${state.files[0].target}` : "formatwerkstatt-konvertiert.zip";
+        let handle = null;
+        if (window.showSaveFilePicker) {
+          try {
+            const ext = suggestedName.split(".").pop().toLowerCase();
+            handle = await window.showSaveFilePicker({ suggestedName, types: saveTypes[ext] ? [saveTypes[ext]] : undefined });
+          } catch (error) {
+            if (error && error.name === "AbortError") { status.className = "status"; status.textContent = "Speichern abgebrochen."; return; }
+            handle = null;
+          }
+        }
+        convert.disabled=true;convert.textContent="Konvertiert ...";status.className="status";status.textContent=`0 von ${state.files.length} Dateien werden verarbeitet ...`;
+        try{
+          const results=[];
+          for(const [index,item] of state.files.entries()){results.push(await output(item.file,item.target));status.textContent=`${index+1} von ${state.files.length} Dateien verarbeitet ...`;}
+          let outputBlob, outputName;
+          if (isSingle) { outputBlob = results[0].data; outputName = results[0].name; }
+          else { const zip=new window.JSZip(); results.forEach(result=>zip.file(result.name,result.data)); outputBlob = await zip.generateAsync({type:"blob"}); outputName = suggestedName; }
+          if (handle) { const writable = await handle.createWritable(); await writable.write(outputBlob); await writable.close(); } else { directDownload(outputBlob, outputName); }
+          const tableWarning=results.some(result=>result.warning);
+          status.className=tableWarning?"status is-error":"status is-success";
+          status.textContent=tableWarning?`Fertig: ${results.length} Dateien gespeichert. Mindestens ein PDF enthielt wahrscheinlich eine Tabelle; sie wurde als Fließtext exportiert.`:`Fertig: ${results.length} Datei${results.length===1?"":"en"} gespeichert.`;
+        }catch(error){console.error(error);status.className="status is-error";status.textContent="Die Konvertierung ist fehlgeschlagen. Prüfe, ob die Datei beschädigt oder passwortgeschützt ist.";}
+        finally{convert.disabled=false;convert.textContent="Stapel konvertieren";}
+      });
     </script>
   </body>
 </html>

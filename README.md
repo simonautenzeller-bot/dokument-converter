@@ -18,6 +18,13 @@ Dateistruktur und kann direkt mit GitHub Pages veroeffentlicht werden.
 Die Seite verwendet externe Browser-Bibliotheken per HTTPS-CDN. Deshalb muss sie fuer die
 Konvertierung online geladen werden; ein Build-Schritt und ein Server sind nicht erforderlich.
 
+## Speicherort beim Download
+
+Beim Klick auf "Stapel konvertieren" fragt das Tool in Chrome/Edge per "Speichern unter"-Dialog
+(File System Access API) nach Ordner und Dateiname, bevor die Konvertierung startet. In Browsern
+ohne diese API (z. B. Firefox, Safari) faellt das Tool automatisch auf den normalen Download
+zurueck; die Datei landet dann ohne Rueckfrage im Standard-Download-Ordner des Browsers.
+
 ## Notenblaetter, Scans und andere PDFs ohne Text-Layer
 
 PDF-Text wird per pdf.js aus dem eingebetteten Text-Layer gelesen. Musiknoten, Scans und
