@@ -1,7 +1,19 @@
 # Formatwerkstatt
 
-Statischer Bulk-Konverter fuer Textdokumente. Die Website besteht aus einer flachen
+Statischer Bulk-Konverter fuer Dokumente und Bilder. Die Website besteht aus einer flachen
 Dateistruktur und kann direkt mit GitHub Pages veroeffentlicht werden.
+
+## Zwei Werkzeuge in einer App
+
+Auf der Startseite waehlt man oben per zwei grossen Kacheln den Modus:
+
+- **📄 Dokumente** - PDF, Word (.docx), TXT, Markdown, HTML, RTF ineinander umwandeln.
+- **🖼️ Bilder** - SVG, PNG, JPG und WEBP ineinander umwandeln (inkl. Groessenskalierung).
+
+Beide Modi teilen sich dieselbe Bedienung: Datei(en) ablegen, Zielformat waehlen, auf
+"Jetzt umwandeln" klicken. Die Oberflaeche ist bewusst reduziert (grosse Schrift, wenige
+Schritte, kein Fachjargon), damit auch ungeuebte Nutzer sie auf einen Blick verstehen;
+seltener benoetigte Optionen stecken eingeklappt unter "⚙ Weitere Einstellungen".
 
 ## GitHub Pages
 
@@ -20,10 +32,11 @@ Konvertierung online geladen werden; ein Build-Schritt und ein Server sind nicht
 
 ## Speicherort beim Download
 
-Beim Klick auf "Stapel konvertieren" fragt das Tool in Chrome/Edge per "Speichern unter"-Dialog
+Beim Klick auf "Jetzt umwandeln" fragt das Tool in Chrome/Edge per "Speichern unter"-Dialog
 (File System Access API) nach Ordner und Dateiname, bevor die Konvertierung startet. In Browsern
 ohne diese API (z. B. Firefox, Safari) faellt das Tool automatisch auf den normalen Download
-zurueck; die Datei landet dann ohne Rueckfrage im Standard-Download-Ordner des Browsers.
+zurueck; die Datei landet dann ohne Rueckfrage im Standard-Download-Ordner des Browsers. Bei
+mehreren Dateien auf einmal wird automatisch ein ZIP-Archiv gespeichert.
 
 ## Notenblaetter, Scans und andere PDFs ohne Text-Layer
 

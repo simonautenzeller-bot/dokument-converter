@@ -4,20 +4,76 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#12322d" />
-    <title>Formatwerkstatt | Dokumente konvertieren</title>
+    <title>Formatwerkstatt | Dateien umwandeln</title>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&display=swap");
-      :root { --ink:#17322e; --forest:#12322d; --paper:#f8f7f1; --canvas:#e5ece5; --lime:#cbed56; --coral:#ed6a4e; --muted:#64756f; --line:#bfd0c9; --white:#fff; --shadow:0 18px 42px rgba(26,56,48,.12); }
-      * { box-sizing:border-box; } body { margin:0; min-width:320px; color:var(--ink); background-color:var(--canvas); background-image:linear-gradient(rgba(18,50,45,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(18,50,45,.045) 1px,transparent 1px); background-size:28px 28px; font:500 15px/1.5 Manrope,sans-serif; }
-      button,select { font:inherit; } button { cursor:pointer; } .shell { width:min(1180px,calc(100% - 32px)); margin:auto; } .topbar { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:24px 0; } .brand { display:flex; align-items:center; gap:10px; color:var(--forest); font-weight:800; } .brand-mark { display:grid; width:32px; height:32px; place-items:center; border:2px solid var(--forest); font:500 13px "DM Mono",monospace; } .privacy { margin:0; color:var(--muted); font-size:13px; }
-      main { padding:18px 0 50px; } .intro { display:grid; grid-template-columns:1.25fr .75fr; gap:30px; align-items:end; margin:22px 0 30px; } .eyebrow { margin:0 0 9px; color:#4f685f; font:500 12px "DM Mono",monospace; text-transform:uppercase; } h1 { margin:0; font-size:clamp(34px,5vw,60px); line-height:1.04; } .intro-copy { margin:0; max-width:405px; color:var(--muted); font-size:16px; }
-      .workspace { display:grid; grid-template-columns:minmax(0,1fr) 328px; gap:16px; align-items:start; } .converter,.formats { border:1px solid var(--line); background:var(--paper); box-shadow:var(--shadow); } .converter { padding:22px; } .formats { padding:20px; } .dropzone { display:grid; min-height:210px; place-items:center; border:2px dashed #84a59c; background:#eff4eb; text-align:center; transition:.15s; } .dropzone.is-dragging { border-color:var(--forest); background:#dceecf; } .dropzone__inside { padding:25px 16px; } .file-stamp { display:grid; width:52px; height:62px; place-items:center; position:relative; margin:0 auto 12px; border:2px solid var(--forest); font:500 12px "DM Mono",monospace; } .file-stamp:after { position:absolute; top:-2px; right:-2px; width:15px; height:15px; border-bottom:2px solid var(--forest); border-left:2px solid var(--forest); background:#eff4eb; content:""; } h2 { margin:0; font-size:19px; } .dropzone h2 { font-size:21px; } .dropzone p,.formats>p { margin:5px 0 15px; color:var(--muted); font-size:13px; }
-      .button { min-height:42px; padding:9px 15px; border:1px solid var(--forest); border-radius:0; background:var(--forest); color:var(--white); font-weight:700; } .button:hover { background:#285249; } .button--outline { background:transparent; border-color:#78948b; color:var(--forest); } .button--outline:hover { background:#e2ebe0; } .queue-header { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:24px 0 10px; } .queue-header h2 { font-size:16px; } .file-count { color:var(--muted); font:500 12px "DM Mono",monospace; } .queue { display:flex; flex-direction:column; gap:8px; } .queue-empty { margin:4px 0; color:var(--muted); font-size:14px; } .file-row { display:grid; grid-template-columns:42px minmax(0,1fr) 104px 34px; gap:10px; align-items:center; padding:10px; border:1px solid var(--line); background:var(--white); } .file-type { display:grid; width:42px; height:34px; place-items:center; background:#deede5; color:var(--forest); font:500 11px "DM Mono",monospace; text-transform:uppercase; } .file-name { min-width:0; } .file-name strong,.file-name span { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .file-name strong { font-size:13px; } .file-name span { color:var(--muted); font-size:12px; } .row-select,.format-select { border:1px solid #78948b; border-radius:0; background:var(--white); color:var(--ink); } .row-select { width:100%; padding:6px; font-size:12px; } .remove { width:30px; height:30px; border:0; background:transparent; color:var(--muted); font-size:22px; } .remove:hover { color:var(--coral); }
-      .image-mode-row { display:flex; flex-direction:column; gap:10px; margin-top:20px; padding-top:18px; border-top:1px solid var(--line); } .image-mode-toggle { display:flex; align-items:flex-start; gap:9px; color:var(--ink); font-size:13px; font-weight:600; } .image-mode-toggle input { width:16px; height:16px; margin-top:2px; accent-color:var(--forest); } .image-mode-toggle span { font-weight:500; color:var(--muted); }
-      .settings { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:end; margin-top:14px; } .field-label { display:block; margin-bottom:6px; color:var(--muted); font-size:12px; font-weight:700; } .format-select { width:100%; height:42px; padding:0 10px; } .status { min-height:21px; margin:12px 0 0; color:var(--muted); font-size:13px; } .status.is-error { color:#a24a34; } .status.is-success { color:#20684c; }
-      .format-group { padding:14px 0; border-top:1px solid var(--line); } .format-group h3 { margin:0 0 8px; font-size:13px; } .chips { display:flex; flex-wrap:wrap; gap:6px; } .chip { padding:4px 7px; border:1px solid #a9bfb7; background:#f5f8f3; color:#365a50; font:500 11px "DM Mono",monospace; } .service-note { margin-top:18px; padding:12px; border-left:4px solid var(--coral); background:#fff0e9; color:#6a4438; font-size:12px; } .service-note strong { display:block; margin-bottom:3px; }
-      .suggestions { margin-top:34px; padding-top:22px; border-top:1px solid rgba(18,50,45,.18); } .suggestions h2 { margin-bottom:12px; } .suggestion-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; } .suggestion { padding:13px; border:1px solid var(--line); background:rgba(248,247,241,.76); } .suggestion strong { display:block; margin-bottom:4px; font:500 13px "DM Mono",monospace; } .suggestion span { color:var(--muted); font-size:12px; }
-      @media(max-width:800px){.intro,.workspace{grid-template-columns:1fr}.intro{gap:12px}.suggestion-grid{grid-template-columns:repeat(2,1fr)}} @media(max-width:500px){.shell{width:min(100% - 22px,1180px)}.privacy{display:none}.converter,.formats{padding:14px}.file-row{grid-template-columns:38px minmax(0,1fr) 30px}.file-row .row-select{grid-column:2}.settings{grid-template-columns:1fr}}
+      @import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Manrope:wght@400;600;700;800&display=swap");
+      :root { --ink:#17322e; --forest:#12322d; --paper:#f8f7f1; --canvas:#eef2ec; --coral:#ed6a4e; --muted:#54655f; --line:#c3d2cb; --white:#fff; --shadow:0 14px 34px rgba(26,56,48,.10); }
+      * { box-sizing:border-box; }
+      body { margin:0; min-width:320px; color:var(--ink); background:var(--canvas); font:400 17px/1.6 Manrope,sans-serif; }
+      button,select,input { font:inherit; }
+      button { cursor:pointer; }
+      .shell { width:min(760px,calc(100% - 32px)); margin:auto; padding:28px 0 60px; }
+      header.top { text-align:center; margin-bottom:22px; }
+      .brand { display:flex; align-items:center; justify-content:center; gap:10px; font-size:26px; font-weight:800; color:var(--forest); }
+      .tagline { margin:6px 0 0; color:var(--muted); font-size:15px; }
+
+      .mode-switch { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:22px 0; }
+      .mode-tab { min-height:76px; padding:12px; border:2px solid var(--line); border-radius:14px; background:var(--white); color:var(--ink); font-weight:700; font-size:17px; line-height:1.35; box-shadow:var(--shadow); }
+      .mode-tab small { display:block; margin-top:3px; color:var(--muted); font-weight:500; font-size:13px; }
+      .mode-tab.is-active { border-color:var(--forest); background:var(--forest); color:var(--white); }
+      .mode-tab.is-active small { color:#cfe0da; }
+
+      .panel { border:1px solid var(--line); background:var(--paper); box-shadow:var(--shadow); border-radius:16px; padding:24px; }
+      .panel[hidden] { display:none; }
+      .steps { margin:0 0 18px; padding:12px 14px; border-radius:10px; background:#e3ede4; color:#2f4a41; font-size:14px; font-weight:600; text-align:center; }
+
+      .dropzone { display:grid; min-height:170px; place-items:center; border:2px dashed #84a59c; border-radius:12px; background:#eff4eb; text-align:center; transition:.15s; }
+      .dropzone.is-dragging { border-color:var(--forest); background:#dceecf; }
+      .dropzone__inside { padding:22px 16px; }
+      .dropzone h2 { margin:0 0 4px; font-size:20px; }
+      .dropzone p { margin:0 0 16px; color:var(--muted); font-size:14px; }
+
+      .button { min-height:52px; padding:12px 20px; border:2px solid var(--forest); border-radius:10px; background:var(--forest); color:var(--white); font-weight:700; font-size:17px; }
+      .button:hover { background:#285249; }
+      .button:disabled { opacity:.55; cursor:not-allowed; }
+      .button--outline { background:var(--white); border-color:#78948b; color:var(--forest); }
+      .button--outline:hover { background:#e2ebe0; }
+
+      .queue-header { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:22px 0 10px; }
+      .queue-header h2 { margin:0; font-size:16px; }
+      .file-count { color:var(--muted); font:500 13px "DM Mono",monospace; }
+      .queue { display:flex; flex-direction:column; gap:8px; }
+      .queue-empty { margin:4px 0; color:var(--muted); font-size:15px; }
+      .file-row { display:grid; grid-template-columns:42px minmax(0,1fr) auto 38px; gap:10px; align-items:center; padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--white); }
+      .file-type { display:grid; width:42px; height:34px; place-items:center; border-radius:6px; background:#deede5; color:var(--forest); font:600 11px "DM Mono",monospace; text-transform:uppercase; }
+      .file-thumb { width:42px; height:34px; object-fit:contain; border-radius:6px; background:repeating-conic-gradient(#e6e6e6 0% 25%,#fff 0% 50%) 0/10px 10px; }
+      .file-name { min-width:0; }
+      .file-name strong,.file-name span { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .file-name strong { font-size:14px; }
+      .file-name span { color:var(--muted); font-size:12px; }
+      .row-select { border:1px solid #78948b; border-radius:6px; background:var(--white); color:var(--ink); padding:6px; font-size:13px; }
+      .remove { width:34px; height:34px; border:0; background:transparent; color:var(--muted); font-size:24px; border-radius:6px; }
+      .remove:hover { color:var(--coral); background:#fbe9e4; }
+
+      .settings { display:flex; flex-direction:column; gap:14px; margin-top:20px; padding-top:18px; border-top:1px solid var(--line); }
+      .field-label { display:block; margin-bottom:6px; color:var(--ink); font-size:15px; font-weight:700; }
+      .format-select { width:100%; height:48px; padding:0 12px; border:1px solid #78948b; border-radius:10px; background:var(--white); color:var(--ink); }
+      .status { min-height:22px; margin:14px 0 0; color:var(--muted); font-size:14px; text-align:center; }
+      .status.is-error { color:#a24a34; font-weight:600; }
+      .status.is-success { color:#20684c; font-weight:600; }
+
+      details.advanced { margin-top:18px; }
+      details.advanced summary { cursor:pointer; font-size:14px; font-weight:700; color:var(--forest); padding:6px 0; }
+      details.advanced .advanced-body { display:flex; flex-direction:column; gap:12px; padding-top:12px; }
+      .toggle-row { display:flex; align-items:flex-start; gap:9px; color:var(--ink); font-size:13px; font-weight:600; }
+      .toggle-row input[type="checkbox"] { width:16px; height:16px; margin-top:2px; accent-color:var(--forest); flex-shrink:0; }
+      .toggle-row span { font-weight:500; color:var(--muted); }
+      .toggle-row strong { color:var(--ink); }
+      .scale-row { display:flex; align-items:center; gap:10px; font-size:14px; }
+      .scale-row input[type="number"] { width:80px; padding:8px; border:1px solid #78948b; border-radius:8px; }
+      .privacy-foot { margin-top:26px; text-align:center; color:var(--muted); font-size:13px; }
+
+      @media(max-width:560px){ .panel{padding:16px} .file-row{grid-template-columns:36px minmax(0,1fr) 34px} .file-row .row-select{grid-column:1/-1} .mode-tab{font-size:15px} }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
@@ -27,26 +83,172 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   </head>
   <body>
-    <div class="shell"><header class="topbar"><div class="brand"><span class="brand-mark">FW</span> Formatwerkstatt</div><p class="privacy">Verarbeitung und Download erfolgen in deinem Browser.</p></header>
-      <main><section class="intro"><div><p class="eyebrow">Bulk-Dokumentkonverter</p><h1>Ein Stapel rein.<br>Das richtige Format raus.</h1></div><p class="intro-copy">Konvertiere Textinhalte aus mehreren PDFs, Word-Dateien und Textformaten direkt auf deinem Gerät.</p></section>
-        <section class="workspace" aria-label="Konverter"><div class="converter"><input id="file-input" type="file" multiple hidden accept=".pdf,.docx,.txt,.md,.html,.htm,.rtf"><div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Dateien auswählen oder hier ablegen"><div class="dropzone__inside"><div class="file-stamp">FILE</div><h2>Dokumente hier ablegen</h2><p>PDF, DOCX, TXT, Markdown, HTML und RTF</p><button id="browse-button" class="button button--outline" type="button">Dateien auswählen</button></div></div><div class="queue-header"><h2>Warteschlange</h2><span id="file-count" class="file-count">0 DATEIEN</span></div><div id="queue" class="queue"><p class="queue-empty">Noch keine Dateien ausgewählt.</p></div><div class="image-mode-row"><label class="image-mode-toggle"><input id="image-mode" type="checkbox"><span><strong style="color:var(--ink)">Notenblätter &amp; Scans:</strong> PDF-Seiten als Bild einbetten statt Text extrahieren. Behält Notenlinien, Layout und Grafiken exakt bei, aber nicht mehr editierbar (gilt für Ziel .docx, .pdf und .html).</span></label><label class="image-mode-toggle"><input id="chord-mode" type="checkbox"><span><strong style="color:var(--ink)">Songtexte mit Akkorden:</strong> Zeilenumbrüche &amp; Ausrichtung beibehalten, Akkorde (G, C, em, D …) werden automatisch fett &amp; farbig hervorgehoben und bleiben über dem richtigen Wort stehen. Ergebnis ist normaler, editierbarer Text (gilt für .docx, .txt, .md und .html).</span></label></div><div class="settings"><label><span class="field-label">Zielformat für alle Dateien</span><select id="target-format" class="format-select"><option value="docx">Word (.docx)</option><option value="pdf">PDF (.pdf)</option><option value="txt">Klartext (.txt)</option><option value="md">Markdown (.md)</option><option value="html">HTML (.html)</option><option value="rtf">Rich Text (.rtf)</option></select></label><button id="convert-button" class="button" type="button">Stapel konvertieren</button></div><p id="status" class="status" role="status">Füge Dokumente hinzu, um einen Stapel vorzubereiten.</p></div>
-          <aside class="formats"><h2>Sinnvolle Textformate</h2><p>Die folgenden Formate passen gut zu diesem Werkzeug.</p><section class="format-group"><h3>Voll unterstützt</h3><div class="chips"><span class="chip">PDF</span><span class="chip">DOCX</span><span class="chip">TXT</span><span class="chip">MD</span><span class="chip">HTML</span><span class="chip">RTF</span></div></section><section class="format-group"><h3>Gute Ergänzungen</h3><div class="chips"><span class="chip">ODT</span><span class="chip">EPUB</span><span class="chip">GOOGLE DOCS</span></div></section><div class="service-note"><strong>Zu Google Docs und ODT</strong>Google Docs braucht eine Google-Anmeldung und ODT einen Office-Konverter. Beides kann als nächster Schritt über einen kleinen lokalen Server ergänzt werden. Diese Seite erzeugt bereits DOCX, das Google Docs direkt importieren kann.</div></aside></section>
-        <section class="suggestions"><h2>Was dabei erhalten bleibt</h2><div class="suggestion-grid"><div class="suggestion"><strong>DOCX</strong><span>Text aus PDF oder Textdateien wird als bearbeitbares Word-Dokument erzeugt.</span></div><div class="suggestion"><strong>PDF</strong><span>Text wird als neues, lesbares PDF gesetzt.</span></div><div class="suggestion"><strong>TXT / MD</strong><span>Ideal für Inhalte ohne komplexe Gestaltung.</span></div><div class="suggestion"><strong>HTML / RTF</strong><span>Praktisch für Web oder einfach formatierte Texte.</span></div></div></section>
-      </main></div>
+    <div class="shell">
+      <header class="top">
+        <div class="brand">🗂️ Formatwerkstatt</div>
+        <p class="tagline">Alles bleibt auf diesem Gerät – nichts wird hochgeladen.</p>
+      </header>
+
+      <div class="mode-switch" role="tablist">
+        <button id="tab-doc" class="mode-tab is-active" type="button" role="tab" aria-selected="true">📄 Dokumente<br><small>Word, PDF, Text</small></button>
+        <button id="tab-img" class="mode-tab" type="button" role="tab" aria-selected="false">🖼️ Bilder<br><small>SVG, PNG, JPG, WEBP</small></button>
+      </div>
+
+      <section id="panel-doc" class="panel">
+        <p class="steps">1&nbsp;Datei wählen&nbsp;&nbsp;→&nbsp;&nbsp;2&nbsp;Format wählen&nbsp;&nbsp;→&nbsp;&nbsp;3&nbsp;Umwandeln klicken</p>
+        <input id="file-input" type="file" multiple hidden accept=".pdf,.docx,.txt,.md,.html,.htm,.rtf" />
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Dateien auswählen oder hier ablegen">
+          <div class="dropzone__inside">
+            <h2>Datei hier ablegen</h2>
+            <p>oder klicken, um eine Datei auszuwählen</p>
+            <button id="browse-button" class="button button--outline" type="button">Datei auswählen</button>
+          </div>
+        </div>
+        <div class="queue-header"><h2>Ausgewählt</h2><span id="file-count" class="file-count">0 DATEIEN</span></div>
+        <div id="queue" class="queue"><p class="queue-empty">Noch keine Datei ausgewählt.</p></div>
+
+        <div class="settings">
+          <label><span class="field-label">In dieses Format umwandeln:</span>
+            <select id="target-format" class="format-select">
+              <option value="docx">Word-Dokument (.docx)</option>
+              <option value="pdf">PDF-Dokument (.pdf)</option>
+              <option value="txt">Nur Text (.txt)</option>
+              <option value="md">Markdown (.md)</option>
+              <option value="html">Webseite (.html)</option>
+              <option value="rtf">Rich Text (.rtf)</option>
+            </select>
+          </label>
+          <button id="convert-button" class="button" type="button">Jetzt umwandeln</button>
+        </div>
+        <p id="status" class="status" role="status">Füge eine Datei hinzu, um loszulegen.</p>
+
+        <details class="advanced" open>
+          <summary>⚙ Weitere Einstellungen</summary>
+          <div class="advanced-body">
+            <label class="toggle-row"><input id="image-mode" type="checkbox"><span><strong>Notenblätter &amp; Scans:</strong> PDF-Seiten als Bild einbetten statt Text extrahieren. Behält Notenlinien, Layout und Grafiken exakt bei, aber nicht mehr editierbar (gilt für Ziel .docx, .pdf und .html).</span></label>
+            <label class="toggle-row"><input id="chord-mode" type="checkbox"><span><strong>Songtexte mit Akkorden:</strong> Zeilenumbrüche &amp; Ausrichtung beibehalten, Akkorde (G, C, em, D …) werden automatisch fett &amp; farbig hervorgehoben und bleiben über dem richtigen Wort stehen. Ergebnis ist normaler, editierbarer Text (gilt für .docx, .txt, .md und .html).</span></label>
+          </div>
+        </details>
+      </section>
+
+      <section id="panel-img" class="panel" hidden>
+        <p class="steps">1&nbsp;Bild wählen&nbsp;&nbsp;→&nbsp;&nbsp;2&nbsp;Format wählen&nbsp;&nbsp;→&nbsp;&nbsp;3&nbsp;Umwandeln klicken</p>
+        <input id="img-file-input" type="file" multiple hidden accept=".svg,.png,.jpg,.jpeg,.webp,image/*" />
+        <div id="img-dropzone" class="dropzone" tabindex="0" role="button" aria-label="Bilder auswählen oder hier ablegen">
+          <div class="dropzone__inside">
+            <h2>Bild hier ablegen</h2>
+            <p>oder klicken, um ein Bild auszuwählen</p>
+            <button id="img-browse-button" class="button button--outline" type="button">Bild auswählen</button>
+          </div>
+        </div>
+        <div class="queue-header"><h2>Ausgewählt</h2><span id="img-file-count" class="file-count">0 DATEIEN</span></div>
+        <div id="img-queue" class="queue"><p class="queue-empty">Noch kein Bild ausgewählt.</p></div>
+
+        <div class="settings">
+          <label><span class="field-label">In dieses Format umwandeln:</span>
+            <select id="img-target" class="format-select">
+              <option value="png">PNG-Bild (.png)</option>
+              <option value="jpg">JPG-Bild (.jpg)</option>
+              <option value="webp">WEBP-Bild (.webp)</option>
+              <option value="svg">SVG-Vektor (.svg)</option>
+            </select>
+          </label>
+          <button id="img-convert-button" class="button" type="button">Jetzt umwandeln</button>
+        </div>
+        <p id="img-status" class="status" role="status">Füge ein Bild hinzu, um loszulegen.</p>
+
+        <details class="advanced" open>
+          <summary>⚙ Weitere Einstellungen</summary>
+          <div class="advanced-body">
+            <div class="scale-row"><label for="img-scale">Größe ändern:</label><input id="img-scale" type="number" min="0.1" max="20" step="0.1" value="1"><span>× (1 = Originalgröße, 2 = doppelt so groß)</span></div>
+            <p style="margin:0;color:var(--muted);font-size:13px;">Hinweis: „In SVG umwandeln" erzeugt bei Fotos/PNG/JPG kein echtes Vektorbild, sondern bettet das Bild in eine SVG-Datei ein. JPG unterstützt keine Transparenz (weißer Hintergrund wird ergänzt).</p>
+          </div>
+        </details>
+      </section>
+
+      <p class="privacy-foot">Verarbeitung und Speichern laufen direkt in deinem Browser – es wird nichts an einen Server gesendet.</p>
+    </div>
     <script type="module">
       import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs";
       pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs";
-      const state = { files: [] };
-      const formats = ["docx","pdf","txt","md","html","rtf"];
-      const input = document.querySelector("#file-input"), dropzone = document.querySelector("#dropzone"), queue = document.querySelector("#queue"), count = document.querySelector("#file-count"), target = document.querySelector("#target-format"), status = document.querySelector("#status"), convert = document.querySelector("#convert-button"), imageMode = document.querySelector("#image-mode"), chordMode = document.querySelector("#chord-mode");
+
+      const esc = (value) => String(value).replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[character]);
       const extension = (file) => file.name.includes(".") ? file.name.split(".").pop().toLowerCase() : "datei";
       const filename = (file) => file.name.replace(/\.[^.]+$/, "");
       const size = (bytes) => bytes < 1048576 ? `${Math.max(1,Math.round(bytes/1024))} KB` : `${(bytes/1048576).toFixed(1)} MB`;
-      const esc = (value) => String(value).replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"})[character]);
-      function render() { count.textContent = `${state.files.length} ${state.files.length === 1 ? "DATEI" : "DATEIEN"}`; queue.innerHTML = state.files.length ? state.files.map((item,index) => `<article class="file-row"><span class="file-type">${esc(extension(item.file).slice(0,4))}</span><div class="file-name"><strong title="${esc(item.file.name)}">${esc(item.file.name)}</strong><span>${size(item.file.size)}</span></div><select class="row-select" data-index="${index}" aria-label="Zielformat"><option value="docx"${item.target === "docx" ? " selected" : ""}>.docx</option><option value="pdf"${item.target === "pdf" ? " selected" : ""}>.pdf</option><option value="txt"${item.target === "txt" ? " selected" : ""}>.txt</option><option value="md"${item.target === "md" ? " selected" : ""}>.md</option><option value="html"${item.target === "html" ? " selected" : ""}>.html</option><option value="rtf"${item.target === "rtf" ? " selected" : ""}>.rtf</option></select><button class="remove" data-remove="${index}" title="Entfernen" aria-label="Entfernen">×</button></article>`).join("") : '<p class="queue-empty">Noch keine Dateien ausgewählt.</p>'; }
-      function add(files) { const accepted = Array.from(files).filter(file => formats.includes(extension(file))); const fresh = accepted.filter(file => !state.files.some(item => item.file.name === file.name && item.file.size === file.size)); state.files.push(...fresh.map(file => ({file,target:target.value}))); render(); status.className = "status"; status.textContent = fresh.length ? `${fresh.length} Datei${fresh.length === 1 ? "" : "en"} bereit zur Konvertierung.` : "Bitte wähle PDF, DOCX, TXT, Markdown, HTML oder RTF aus."; }
+      const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+
+      // ---------- Mode switch ----------
+      const tabDoc = document.querySelector("#tab-doc"), tabImg = document.querySelector("#tab-img");
+      const panelDoc = document.querySelector("#panel-doc"), panelImg = document.querySelector("#panel-img");
+      function setMode(mode) {
+        const isDoc = mode === "doc";
+        tabDoc.classList.toggle("is-active", isDoc); tabDoc.setAttribute("aria-selected", String(isDoc));
+        tabImg.classList.toggle("is-active", !isDoc); tabImg.setAttribute("aria-selected", String(!isDoc));
+        panelDoc.hidden = !isDoc; panelImg.hidden = isDoc;
+      }
+      tabDoc.addEventListener("click", () => setMode("doc"));
+      tabImg.addEventListener("click", () => setMode("img"));
+
+      // ---------- Shared save logic ----------
+      const saveTypes = {
+        docx: { description: "Word-Dokument", accept: { "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"] } },
+        pdf: { description: "PDF-Dokument", accept: { "application/pdf": [".pdf"] } },
+        txt: { description: "Textdatei", accept: { "text/plain": [".txt"] } },
+        md: { description: "Markdown-Datei", accept: { "text/markdown": [".md"] } },
+        html: { description: "HTML-Datei", accept: { "text/html": [".html"] } },
+        rtf: { description: "Rich-Text-Datei", accept: { "application/rtf": [".rtf"] } },
+        zip: { description: "ZIP-Archiv", accept: { "application/zip": [".zip"] } },
+        png: { description: "PNG-Bild", accept: { "image/png": [".png"] } },
+        jpg: { description: "JPG-Bild", accept: { "image/jpeg": [".jpg"] } },
+        webp: { description: "WEBP-Bild", accept: { "image/webp": [".webp"] } },
+        svg: { description: "SVG-Vektor", accept: { "image/svg+xml": [".svg"] } },
+      };
+      function directDownload(blob, name) { const url = URL.createObjectURL(blob), link = document.createElement("a"); link.href = url; link.download = name; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
+      async function runConvert({ items, nameFor, convertOne, zipName, button, statusEl, emptyMessage }) {
+        if (!items.length) { statusEl.className = "status is-error"; statusEl.textContent = emptyMessage; return; }
+        const isSingle = items.length === 1;
+        const suggestedName = isSingle ? nameFor(items[0]) : zipName;
+        let handle = null;
+        if (window.showSaveFilePicker) {
+          try {
+            const ext = suggestedName.split(".").pop().toLowerCase();
+            handle = await window.showSaveFilePicker({ suggestedName, types: saveTypes[ext] ? [saveTypes[ext]] : undefined });
+          } catch (error) {
+            if (error && error.name === "AbortError") { statusEl.className = "status"; statusEl.textContent = "Speichern abgebrochen."; return; }
+            handle = null;
+          }
+        }
+        const originalLabel = button.textContent;
+        button.disabled = true; button.textContent = "Wird umgewandelt ..."; statusEl.className = "status"; statusEl.textContent = `0 von ${items.length} wird verarbeitet ...`;
+        try {
+          const results = [];
+          for (const [index, item] of items.entries()) { results.push(await convertOne(item)); statusEl.textContent = `${index + 1} von ${items.length} verarbeitet ...`; }
+          let outputBlob, outputName;
+          if (isSingle) { outputBlob = results[0].data; outputName = results[0].name; }
+          else { const zip = new window.JSZip(); results.forEach(result => zip.file(result.name, result.data)); outputBlob = await zip.generateAsync({ type: "blob" }); outputName = zipName; }
+          if (handle) { const writable = await handle.createWritable(); await writable.write(outputBlob); await writable.close(); } else { directDownload(outputBlob, outputName); }
+          const warning = results.some(result => result.warning);
+          statusEl.className = warning ? "status is-error" : "status is-success";
+          statusEl.textContent = warning ? `Fertig: ${plural(results.length, "Datei", "Dateien")} gespeichert. Mindestens ein PDF enthielt wahrscheinlich eine Tabelle; sie wurde als Fließtext exportiert.` : `Fertig: ${plural(results.length, "Datei", "Dateien")} gespeichert.`;
+        } catch (error) {
+          console.error(error);
+          statusEl.className = "status is-error";
+          statusEl.textContent = "Die Umwandlung ist fehlgeschlagen. Prüfe, ob die Datei beschädigt oder geschützt ist.";
+        } finally {
+          button.disabled = false; button.textContent = originalLabel;
+        }
+      }
+
+      // ---------- Document converter ----------
+      const state = { files: [] };
+      const formats = ["docx","pdf","txt","md","html","htm","rtf"];
+      const input = document.querySelector("#file-input"), dropzone = document.querySelector("#dropzone"), queue = document.querySelector("#queue"), count = document.querySelector("#file-count"), target = document.querySelector("#target-format"), status = document.querySelector("#status"), convert = document.querySelector("#convert-button"), imageMode = document.querySelector("#image-mode"), chordMode = document.querySelector("#chord-mode");
+      function render() { count.textContent = `${state.files.length} ${state.files.length === 1 ? "DATEI" : "DATEIEN"}`; queue.innerHTML = state.files.length ? state.files.map((item,index) => `<article class="file-row"><span class="file-type">${esc(extension(item.file).slice(0,4))}</span><div class="file-name"><strong title="${esc(item.file.name)}">${esc(item.file.name)}</strong><span>${size(item.file.size)}</span></div><select class="row-select" data-index="${index}" aria-label="Zielformat"><option value="docx"${item.target === "docx" ? " selected" : ""}>.docx</option><option value="pdf"${item.target === "pdf" ? " selected" : ""}>.pdf</option><option value="txt"${item.target === "txt" ? " selected" : ""}>.txt</option><option value="md"${item.target === "md" ? " selected" : ""}>.md</option><option value="html"${item.target === "html" ? " selected" : ""}>.html</option><option value="rtf"${item.target === "rtf" ? " selected" : ""}>.rtf</option></select><button class="remove" data-remove="${index}" title="Entfernen" aria-label="Entfernen">×</button></article>`).join("") : '<p class="queue-empty">Noch keine Datei ausgewählt.</p>'; }
+      function add(files) { const accepted = Array.from(files).filter(file => formats.includes(extension(file))); const fresh = accepted.filter(file => !state.files.some(item => item.file.name === file.name && item.file.size === file.size)); state.files.push(...fresh.map(file => ({file,target:target.value}))); render(); status.className = "status"; status.textContent = fresh.length ? `${plural(fresh.length, "Datei", "Dateien")} bereit zur Umwandlung.` : "Bitte wähle PDF, Word, Text, Markdown, HTML oder RTF aus."; }
       document.querySelector("#browse-button").addEventListener("click", () => input.click()); dropzone.addEventListener("click", event => { if(event.target === dropzone) input.click(); }); dropzone.addEventListener("keydown", event => { if(event.key === "Enter" || event.key === " "){ event.preventDefault(); input.click(); }}); input.addEventListener("change", () => { add(input.files); input.value = ""; }); ["dragenter","dragover"].forEach(name => dropzone.addEventListener(name,event => {event.preventDefault();dropzone.classList.add("is-dragging");})); ["dragleave","drop"].forEach(name => dropzone.addEventListener(name,event => {event.preventDefault();dropzone.classList.remove("is-dragging");})); dropzone.addEventListener("drop", event => add(event.dataTransfer.files));
-      queue.addEventListener("change", event => { const item = state.files[Number(event.target.dataset.index)]; if(item) item.target = event.target.value; }); queue.addEventListener("click", event => { const index = Number(event.target.dataset.remove); if(Number.isInteger(index)){state.files.splice(index,1);render();} }); target.addEventListener("change", () => {state.files.forEach(item => item.target = target.value);render();status.textContent="Zielformat auf alle Dateien angewendet.";});
+      queue.addEventListener("change", event => { const item = state.files[Number(event.target.dataset.index)]; if(item) item.target = event.target.value; }); queue.addEventListener("click", event => { const index = Number(event.target.dataset.remove); if(Number.isInteger(index)){state.files.splice(index,1);render();} }); target.addEventListener("change", () => {state.files.forEach(item => item.target = target.value);render();status.textContent="Format auf alle Dateien angewendet.";});
+
       function textToHtml(text,title){return `<!doctype html><html lang="de"><head><meta charset="utf-8"><title>${esc(title)}</title><style>body{font:11pt Georgia,serif;line-height:1.45;max-width:760px;margin:36px auto;padding:0 24px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #777;padding:6px;text-align:left}</style></head><body>${text.split(/\n{2,}/).map(part => `<p>${esc(part).replace(/\n/g,"<br>")}</p>`).join("\n")}</body></html>`;}
       function textToRtf(text){return `{\\rtf1\\ansi\\deff0\n${text.replace(/\\/g,"\\\\").replace(/[{}]/g,"\\$&").replace(/\n/g,"\\par\n")}}`;}
       function makePdfLines(items) {
@@ -210,44 +412,85 @@
         if(format === "rtf") return {name:`${filename(file)}.rtf`,data:new Blob([textToRtf(documentData.text)],{type:"application/rtf"}), warning:documentData.type === "pdf" && documentData.hasTable};
         return {name:`${filename(file)}.${format}`,data:new Blob([documentData.text],{type:"text/plain;charset=utf-8"}), warning:documentData.type === "pdf" && documentData.hasTable};
       }
-      const saveTypes = {
-        docx: { description: "Word-Dokument", accept: { "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"] } },
-        pdf: { description: "PDF-Dokument", accept: { "application/pdf": [".pdf"] } },
-        txt: { description: "Textdatei", accept: { "text/plain": [".txt"] } },
-        md: { description: "Markdown-Datei", accept: { "text/markdown": [".md"] } },
-        html: { description: "HTML-Datei", accept: { "text/html": [".html"] } },
-        rtf: { description: "Rich-Text-Datei", accept: { "application/rtf": [".rtf"] } },
-        zip: { description: "ZIP-Archiv", accept: { "application/zip": [".zip"] } },
-      };
-      function directDownload(blob, name) { const url = URL.createObjectURL(blob), link = document.createElement("a"); link.href = url; link.download = name; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
-      convert.addEventListener("click",async()=>{
-        if(!state.files.length){status.className="status is-error";status.textContent="Bitte füge zuerst mindestens eine Datei hinzu.";return;}
-        const isSingle = state.files.length === 1;
-        const suggestedName = isSingle ? `${filename(state.files[0].file)}.${state.files[0].target}` : "formatwerkstatt-konvertiert.zip";
-        let handle = null;
-        if (window.showSaveFilePicker) {
-          try {
-            const ext = suggestedName.split(".").pop().toLowerCase();
-            handle = await window.showSaveFilePicker({ suggestedName, types: saveTypes[ext] ? [saveTypes[ext]] : undefined });
-          } catch (error) {
-            if (error && error.name === "AbortError") { status.className = "status"; status.textContent = "Speichern abgebrochen."; return; }
-            handle = null;
-          }
+      convert.addEventListener("click", () => runConvert({
+        items: state.files,
+        nameFor: item => `${filename(item.file)}.${item.target}`,
+        convertOne: item => output(item.file, item.target),
+        zipName: "formatwerkstatt-dokumente.zip",
+        button: convert,
+        statusEl: status,
+        emptyMessage: "Bitte füge zuerst mindestens eine Datei hinzu.",
+      }));
+
+      // ---------- Image converter ----------
+      const IMAGE_FORMATS = ["svg","png","jpg","jpeg","webp"];
+      const IMAGE_MIME = { svg: "image/svg+xml", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp" };
+      const imgState = { files: [] };
+      const imgInput = document.querySelector("#img-file-input"), imgDropzone = document.querySelector("#img-dropzone"), imgQueue = document.querySelector("#img-queue"), imgCount = document.querySelector("#img-file-count"), imgTarget = document.querySelector("#img-target"), imgStatus = document.querySelector("#img-status"), imgConvert = document.querySelector("#img-convert-button"), imgScale = document.querySelector("#img-scale");
+      function imgExt(file) { const value = extension(file); return value === "jpeg" ? "jpg" : value; }
+      function renderImg() {
+        imgCount.textContent = `${imgState.files.length} ${imgState.files.length === 1 ? "DATEI" : "DATEIEN"}`;
+        imgQueue.innerHTML = imgState.files.length ? imgState.files.map((item,index) => `<article class="file-row"><img class="file-thumb" src="${item.url}" alt=""><div class="file-name"><strong title="${esc(item.file.name)}">${esc(item.file.name)}</strong><span>${size(item.file.size)}</span></div><span></span><button class="remove" data-remove-img="${index}" title="Entfernen" aria-label="Entfernen">×</button></article>`).join("") : '<p class="queue-empty">Noch kein Bild ausgewählt.</p>';
+      }
+      function addImages(files) {
+        const accepted = Array.from(files).filter(file => IMAGE_FORMATS.includes(extension(file)));
+        const fresh = accepted.filter(file => !imgState.files.some(item => item.file.name === file.name && item.file.size === file.size));
+        imgState.files.push(...fresh.map(file => ({ file, target: imgTarget.value, scale: parseFloat(imgScale.value) || 1, url: URL.createObjectURL(file) })));
+        renderImg();
+        imgStatus.className = "status";
+        imgStatus.textContent = fresh.length ? `${plural(fresh.length, "Bild", "Bilder")} bereit zur Umwandlung.` : "Bitte wähle SVG, PNG, JPG oder WEBP aus.";
+      }
+      document.querySelector("#img-browse-button").addEventListener("click", () => imgInput.click());
+      imgDropzone.addEventListener("click", event => { if (event.target === imgDropzone) imgInput.click(); });
+      imgDropzone.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); imgInput.click(); } });
+      imgInput.addEventListener("change", () => { addImages(imgInput.files); imgInput.value = ""; });
+      ["dragenter","dragover"].forEach(name => imgDropzone.addEventListener(name, event => { event.preventDefault(); imgDropzone.classList.add("is-dragging"); }));
+      ["dragleave","drop"].forEach(name => imgDropzone.addEventListener(name, event => { event.preventDefault(); imgDropzone.classList.remove("is-dragging"); }));
+      imgDropzone.addEventListener("drop", event => addImages(event.dataTransfer.files));
+      imgQueue.addEventListener("click", event => { const index = Number(event.target.dataset.removeImg); if (Number.isInteger(index)) { URL.revokeObjectURL(imgState.files[index].url); imgState.files.splice(index, 1); renderImg(); } });
+      imgTarget.addEventListener("change", () => { imgState.files.forEach(item => item.target = imgTarget.value); imgStatus.className = "status"; imgStatus.textContent = "Format auf alle Bilder angewendet."; });
+      imgScale.addEventListener("change", () => { imgState.files.forEach(item => item.scale = parseFloat(imgScale.value) || 1); });
+
+      function loadImageFromFile(file) {
+        return new Promise((resolve, reject) => {
+          const url = URL.createObjectURL(file);
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => reject(new Error("Bild konnte nicht geladen werden"));
+          img.src = url;
+        });
+      }
+      async function convertImage(entry) {
+        const sourceExt = imgExt(entry.file);
+        const target = entry.target;
+        if (sourceExt === "svg" && target === "svg") return { name: entry.file.name, data: entry.file };
+        const img = await loadImageFromFile(entry.file);
+        const scale = entry.scale || 1;
+        const width = Math.max(1, Math.round((img.naturalWidth || 300) * scale));
+        const height = Math.max(1, Math.round((img.naturalHeight || 150) * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = width; canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (target === "jpg") { ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, width, height); }
+        ctx.drawImage(img, 0, 0, width, height);
+        if (target === "svg") {
+          const pngDataUrl = canvas.toDataURL("image/png");
+          const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><image width="${width}" height="${height}" href="${pngDataUrl}"/></svg>`;
+          return { name: `${filename(entry.file)}.svg`, data: new Blob([svgString], { type: "image/svg+xml" }) };
         }
-        convert.disabled=true;convert.textContent="Konvertiert ...";status.className="status";status.textContent=`0 von ${state.files.length} Dateien werden verarbeitet ...`;
-        try{
-          const results=[];
-          for(const [index,item] of state.files.entries()){results.push(await output(item.file,item.target));status.textContent=`${index+1} von ${state.files.length} Dateien verarbeitet ...`;}
-          let outputBlob, outputName;
-          if (isSingle) { outputBlob = results[0].data; outputName = results[0].name; }
-          else { const zip=new window.JSZip(); results.forEach(result=>zip.file(result.name,result.data)); outputBlob = await zip.generateAsync({type:"blob"}); outputName = suggestedName; }
-          if (handle) { const writable = await handle.createWritable(); await writable.write(outputBlob); await writable.close(); } else { directDownload(outputBlob, outputName); }
-          const tableWarning=results.some(result=>result.warning);
-          status.className=tableWarning?"status is-error":"status is-success";
-          status.textContent=tableWarning?`Fertig: ${results.length} Dateien gespeichert. Mindestens ein PDF enthielt wahrscheinlich eine Tabelle; sie wurde als Fließtext exportiert.`:`Fertig: ${results.length} Datei${results.length===1?"":"en"} gespeichert.`;
-        }catch(error){console.error(error);status.className="status is-error";status.textContent="Die Konvertierung ist fehlgeschlagen. Prüfe, ob die Datei beschädigt oder passwortgeschützt ist.";}
-        finally{convert.disabled=false;convert.textContent="Stapel konvertieren";}
-      });
+        const mime = IMAGE_MIME[target];
+        const dataBlob = await canvasToBlob(canvas, mime, target === "png" ? undefined : 0.92);
+        return { name: `${filename(entry.file)}.${target}`, data: dataBlob };
+      }
+      imgConvert.addEventListener("click", () => runConvert({
+        items: imgState.files,
+        nameFor: item => `${filename(item.file)}.${item.target}`,
+        convertOne: item => convertImage(item),
+        zipName: "formatwerkstatt-bilder.zip",
+        button: imgConvert,
+        statusEl: imgStatus,
+        emptyMessage: "Bitte füge zuerst mindestens ein Bild hinzu.",
+      }));
     </script>
   </body>
 </html>
