@@ -26,9 +26,24 @@ seltener benoetigte Optionen stecken eingeklappt unter "⚙ Weitere Einstellunge
 
 - `index.html`: GitHub-Pages-Einstieg im Repository-Root.
 - `dokument-konverter.html`: Vollstaendiges Tool fuer Mehrfachauswahl und Konvertierung.
+- `manifest.json`, `sw.js`, `icon-*.png`, `apple-touch-icon.png`: PWA-Dateien (siehe unten).
 
 Die Seite verwendet externe Browser-Bibliotheken per HTTPS-CDN. Deshalb muss sie fuer die
 Konvertierung online geladen werden; ein Build-Schritt und ein Server sind nicht erforderlich.
+
+## Installierbar als App (PWA)
+
+Die Seite ist eine Progressive Web App und laesst sich auf dem Handy "installieren":
+
+- **Android/Chrome:** Seite oeffnen -> Menu (⋮) -> "App installieren" bzw. "Zum Startbildschirm
+  hinzufuegen".
+- **iPhone/Safari:** Seite oeffnen -> Teilen-Symbol -> "Zum Home-Bildschirm".
+
+Danach startet die App vom Homescreen im eigenen Fenster (ohne Adressleiste), mit eigenem Icon
+(`icon-192.png` / `icon-512.png`, definiert in `manifest.json`). `sw.js` ist ein Service Worker,
+der die App-Huelle (HTML/Icons/Manifest) fuer schnelleren Start zwischenspeichert; die
+Umwandlungs-Bibliotheken kommen weiterhin per CDN und benoetigen daher beim ersten Aufruf bzw.
+bei jeder Konvertierung eine Internetverbindung.
 
 ## Speicherort beim Download
 

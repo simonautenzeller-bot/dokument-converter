@@ -1,0 +1,17 @@
+{
+  "name": "Formatwerkstatt",
+  "short_name": "Formatwerkstatt",
+  "description": "Dokumente und Bilder direkt im Browser umwandeln – ohne Upload auf einen Server.",
+  "start_url": "./dokument-konverter.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#eef2ec",
+  "theme_color": "#12322d",
+  "lang": "de",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
