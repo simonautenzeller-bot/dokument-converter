@@ -46,7 +46,11 @@ nicht mehr ueber dem passenden Wort stehen.
 
 Die Checkbox **"Songtexte mit Akkorden: Zeilenumbrüche & Ausrichtung beibehalten"** behaelt
 Zeilenumbrueche bei und rekonstruiert die horizontale Position jedes Worts ueber Leerzeichen
-(wie ein klassisches Text-Chord-Chart), gesetzt in einer Schreibmaschinenschrift (Consolas). Das
-Ergebnis ist normaler, vollstaendig editierbarer Text - Akkorde bleiben dabei ungefaehr ueber der
-richtigen Silbe stehen. Gilt fuer .docx, .txt, .md (als Codeblock) und .html (als `<pre>`); .rtf
-faellt auf den normalen Fließtext zurueck.
+(wie ein klassisches Text-Chord-Chart), gesetzt in der normalen Dokumentschrift (Georgia) statt
+einer Schreibmaschinenschrift. Zeilen, die nur aus Akkord-Symbolen bestehen (z. B. "G", "Em",
+"D7"), werden automatisch erkannt und fett + blau (14pt Liedtext, 10pt Akkorde) hervorgehoben -
+genau wie in handformatierten Chord-Sheets in Word ueblich. Das Ergebnis ist normaler,
+vollstaendig editierbarer Text - Akkorde bleiben dabei ungefaehr ueber der richtigen Silbe stehen.
+Gilt fuer .docx (mit Formatierung) sowie .html (mit Formatierung), .txt und .md (als Codeblock,
+ohne Formatierung, da reiner Text keine Farben/Fett kennt); .rtf faellt auf den normalen
+Fließtext zurueck.
